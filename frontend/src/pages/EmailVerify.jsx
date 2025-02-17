@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { assets } from '../assets/assets'
 import axios from 'axios';
 import { AppContext } from '../context/AppContext';
@@ -46,12 +46,19 @@ const onSubmitHandler = async (e) =>{
       if(data.success){
         toast.success(data.message);
         getUserData()
+        navigate('/')
 
+      }else{
+        toast.error(data.message);
       }
   }catch(error){
-
+    toast.error(error.message);
   }
 }
+
+  useEffect(()=>{
+    isLoggedin && userData && userData.accountVerified && navigate('/')
+  },[isLoggedin,userData])
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-200 to-purple-400">
@@ -62,7 +69,7 @@ const onSubmitHandler = async (e) =>{
               alt=""
             />
 
-            <form className='bg=slate-900 p-8 rounded-lg w-96 text-sm'>
+            <form onSubmit={onSubmitHandler} className='bg=slate-900 p-8 rounded-lg w-96 text-sm'>
               <h1 className='text-white text-2xl font-semibold text-center mb-4'>Email Verify OTP</h1>
               <p className='text-center mb-6 text-indigo-300'>Enter the 6-digit code sent to your email.</p>
             <div className='flex justify-between mb-8' onPaste={handelPaste}>
@@ -76,6 +83,9 @@ const onSubmitHandler = async (e) =>{
             </div>
             <button className='w-full py-3 bg-gradient-to-r from-indigo-500 to-indigo-900 text-white rounded-full'>Verify email</button>
             </form>
+
+           
+          
     </div>
   )
 }
